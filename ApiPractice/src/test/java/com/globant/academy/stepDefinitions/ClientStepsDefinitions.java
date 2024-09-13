@@ -57,7 +57,7 @@ public class ClientStepsDefinitions {
         Assert.assertTrue("Clients were not deleted correctly", clientList.isEmpty());
     }
     
-    @Then("the response to the request should have a status code of {int}")
+    @Then("The response to the request should have a status code of {int}")
     public void theStatusCodeOfTheRequestWas(int statusCode) {
         Assert.assertEquals(statusCode, response.statusCode());
     }
