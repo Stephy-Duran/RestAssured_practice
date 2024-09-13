@@ -39,10 +39,10 @@ public class ClientRequest extends BaseRequest {
         return requestDelete(endpoint, createBaseHeaders());
     }
     
-    public Response createClientWithFakeData() {
+    public Response createClientWithFakeData(String condition) {
         Faker fakeData = new Faker();
         Client client = Client.builder()
-                              .name(fakeData.name().firstName())
+                              .name(condition.equals("fake") ? fakeData.name().firstName() : "laura")
                               .lastName(fakeData.name().lastName())
                               .country(fakeData.country().name())
                               .city(fakeData.address().city())
@@ -52,17 +52,8 @@ public class ClientRequest extends BaseRequest {
         return this.createClient(client);
     }
     
-    public Response createClientLaura() {
-        Faker fakeData = new Faker();
-        Client client = Client.builder()
-                              .name("Laura")
-                              .lastName(fakeData.name().lastName())
-                              .country(fakeData.country().name())
-                              .city(fakeData.address().city())
-                              .email(fakeData.internet().emailAddress())
-                              .phone(fakeData.phoneNumber().cellPhone())
-                              .build();
-        return this.createClient(client);
+    public Client getClientEntity(@NotNull Response response) {
+        return response.as(Client.class);
     }
     
     public List<Client> getClientsEntity(@NotNull Response response) {
@@ -74,5 +65,4 @@ public class ClientRequest extends BaseRequest {
         Gson gson = new Gson();
         return gson.fromJson(clientJson, Client.class);
     }
-    
 }
