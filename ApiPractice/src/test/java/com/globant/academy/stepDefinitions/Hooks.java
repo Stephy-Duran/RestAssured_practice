@@ -1,11 +1,11 @@
 package com.globant.academy.stepDefinitions;
 
+import com.globant.academy.utils.CleanUp;
 import com.globant.academy.utils.Constants;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
 import io.restassured.RestAssured;
-import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,9 +30,9 @@ public class Hooks {
         
         if(scenario.getSourceTagNames().contains("@PostConditionDeleteClients")){
             try {
-                ClientStepsDefinitions clientStepsDefinitions = new ClientStepsDefinitions();
-                clientStepsDefinitions.deleteAllClients();
-                clientStepsDefinitions.clientListShouldBeEmpty();
+                CleanUp cleanUp = new CleanUp();
+                cleanUp.deleteAllClients();
+                cleanUp.clientListShouldBeEmpty();
             } catch (Exception e) {
                 log.error("Error during cleanup: " + e.getMessage());
             }

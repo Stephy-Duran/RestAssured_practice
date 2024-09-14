@@ -1,7 +1,6 @@
 package com.globant.academy.stepDefinitions;
 
 import com.globant.academy.models.Client;
-import com.globant.academy.models.Resource;
 import com.globant.academy.requests.ClientRequest;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -42,42 +41,6 @@ public class ClientStepsDefinitions {
         log.info(response.body().asPrettyString());
     }
     
-    //@When("I send a DELETE request to delete all clients")
-    public void deleteAllClients() {
-        response = clientRequest.getClients();//obtengo todos lo clientes
-        List<Client> clientList = clientRequest.getClientsEntity(response);  // deserializar la lista de clientes
-        List<String> existingClientsIds = new ArrayList<>();
-        for(Client client : clientList) {
-            existingClientsIds.add(client.getId());
-        }
-        for(String id : existingClientsIds) {
-            response = clientRequest.deleteClient(id);
-        }
-        response = clientRequest.getClients();
-        clientList = clientRequest.getClientsEntity(response);
-        Assert.assertTrue("Clients were not deleted correctly", clientList.isEmpty());
-        log.info("All clients were removed");
-    }
-    
-    @Then("The response to the request should have a status code of {int}")
-    public void theStatusCodeOfTheRequestWas(int statusCode) {
-        Assert.assertEquals(statusCode, response.statusCode());
-    }
-    
-    @Then("the response's body structure matches with client Json schema")
-    public void theResponseSBodyStructureIsCorrect() {
-        String path = "schemas/clients.json";
-        Assert.assertTrue(clientRequest.validateSchema(response, path));
-        log.info("Successfully Validated schema from Client object");
-    }
-    
-    //@Then("the client list should be empty")
-    public void clientListShouldBeEmpty() {
-        response = clientRequest.getClients();
-        List<Client> clientList = clientRequest.getClientsEntity(response);
-        Assert.assertTrue(clientList.isEmpty());
-    }
-    
     @When("I send a POST to create a new client")
     public void createANewClient() {
         response = clientRequest.createClientWithFakeData("fake");
@@ -86,7 +49,7 @@ public class ClientStepsDefinitions {
         Assert.assertEquals(201, response.statusCode());
     }
     
-    @And("I retrieve the details of the new client")
+    @When("I retrieve the details of the new client")
     public void findTheNewClient() {
         response = clientRequest.getClients();
         List<Client> clientList = clientRequest.getClientsEntity(response);
@@ -98,7 +61,7 @@ public class ClientStepsDefinitions {
         }
     }
     
-    @And("I update any client's {string} with the following value {string}")
+    @When("I update any client's {string} with the following value {string}")
     public void updateAnyClientSWithTheFollowing(String attribute, String value) {
         boolean isAttributeUpdated = true;
         switch(attribute.toLowerCase()) {
@@ -133,13 +96,6 @@ public class ClientStepsDefinitions {
         }
     }
     
-    @And("I delete the new client")
-    public void deleteClient() {
-        response = clientRequest.deleteClient(client.getId());
-        Assert.assertEquals(200, response.statusCode());
-        log.info("the client has been removed");
-    }
-    
     @When("the client's phone number is updated to {string} for the first client that matches by {string}")
     public void updateClientPhoneNumberByName(String newPhoneNumber, String name) {
         response = clientRequest.getClients();
@@ -165,6 +121,13 @@ public class ClientStepsDefinitions {
         }
     }
     
+    @Then("I delete the new client")
+    public void deleteClient() {
+        response = clientRequest.deleteClient(client.getId());
+        Assert.assertEquals(200, response.statusCode());
+        log.info("the client has been removed");
+    }
+    
     @Then("I validate that the client is not in the system.")
     public void iValidateThatTheClientIsNotInTheSystem() {
         boolean isClientPresent = false;
@@ -177,5 +140,17 @@ public class ClientStepsDefinitions {
             }
         }
         Assert.assertFalse(isClientPresent);
+    }
+    
+    @Then("The response to the request should have a status code of {int}")
+    public void theStatusCodeOfTheRequestWas(int statusCode) {
+        Assert.assertEquals(statusCode, response.statusCode());
+    }
+    
+    @Then("the response's body structure matches with client Json schema")
+    public void theResponseSBodyStructureIsCorrect() {
+        String path = "schemas/clients.json";
+        Assert.assertTrue(clientRequest.validateSchema(response, path));
+        log.info("Successfully Validated schema from Client object");
     }
 }

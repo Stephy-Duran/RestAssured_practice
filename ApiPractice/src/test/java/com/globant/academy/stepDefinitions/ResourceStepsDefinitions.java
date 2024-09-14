@@ -42,18 +42,6 @@ public class ResourceStepsDefinitions {
         log.info("The resources were found");
     }
     
-    @Then("the response's body structure matches with resources list Json schema")
-    public void doesResponseBodyStructureMatchResourcesListJsonSchema() {
-        String resourcesPathSchema = "schemas/resourcesList.json";
-        Assert.assertTrue(resourceRequest.validateSchema(response, resourcesPathSchema));
-        log.info("Successfully Validated schema from resource List objects");
-    }
-    
-    @Then("the response should have a status code of {int}")
-    public void theStatusCodeOfTheRequestWas(int statusCode) {
-        Assert.assertEquals(statusCode, response.statusCode());
-    }
-    
     @When("I send a PUT request to update all retrieved resources to inactive")
     public void sendAPUTRequestToUpdateAllRetrievedResourcesToInactive() {
         response = resourceRequest.getResources();
@@ -77,7 +65,7 @@ public class ResourceStepsDefinitions {
         log.info("\nThe last resource was found: {}", resource.toString());
     }
     
-    @And("I sent a PUT request to update all the parameters of this resource")
+    @When("I sent a PUT request to update all the parameters of this resource")
     public void iSentAPUTRequestToUpdateAllTheParametersOfThisResource() {
         Faker fakeData = new Faker();
         resource = resource.toBuilder()
@@ -94,12 +82,22 @@ public class ResourceStepsDefinitions {
         log.info("\nThe resource was updated.{}", response.body().asPrettyString());
     }
     
+    @Then("the response's body structure matches with resources list Json schema")
+    public void doesResponseBodyStructureMatchResourcesListJsonSchema() {
+        String resourcesPathSchema = "schemas/resourcesList.json";
+        Assert.assertTrue(resourceRequest.validateSchema(response, resourcesPathSchema));
+        log.info("Successfully Validated schema from resource List objects");
+    }
+    
+    @Then("the response should have a status code of {int}")
+    public void theStatusCodeOfTheRequestWas(int statusCode) {
+        Assert.assertEquals(statusCode, response.statusCode());
+    }
+    
     @Then("the response's body structure matches with resources Json schema")
     public void doesResponseBodyStructureMatchResourcesJsonSchema() {
         String resourceSchemaPath = "schemas/resources.json";
         Assert.assertTrue(resourceRequest.validateSchema(response, resourceSchemaPath));
         log.info("Successfully Validated schema from resource object");
     }
-    
-  
 }
