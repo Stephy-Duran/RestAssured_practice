@@ -19,11 +19,6 @@ public class ClientRequest extends BaseRequest {
         return requestGet(endpoint, createBaseHeaders());
     }
     
-    public Response getClient(String clientId) {
-        endpoint = String.format(Constants.URL_WITH_PARAM, Constants.CLIENTS_PATH, clientId);
-        return requestGet(endpoint, createBaseHeaders());
-    }
-    
     public Response createClient(Client client) {
         endpoint = String.format(Constants.URL, Constants.CLIENTS_PATH);
         return requestPost(endpoint, createBaseHeaders(), client);
@@ -59,10 +54,5 @@ public class ClientRequest extends BaseRequest {
     public List<Client> getClientsEntity(@NotNull Response response) {
         JsonPath jsonPath = response.jsonPath();
         return jsonPath.getList("", Client.class);
-    }
-    
-    public Client getClientEntity(String clientJson) {
-        Gson gson = new Gson();
-        return gson.fromJson(clientJson, Client.class);
     }
 }

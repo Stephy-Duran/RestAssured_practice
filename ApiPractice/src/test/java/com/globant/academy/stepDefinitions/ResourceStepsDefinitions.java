@@ -1,6 +1,5 @@
 package com.globant.academy.stepDefinitions;
 
-
 import com.globant.academy.models.Resource;
 import com.globant.academy.requests.ResourceRequest;
 import io.cucumber.java.en.And;
@@ -17,7 +16,7 @@ import java.util.List;
 
 public class ResourceStepsDefinitions {
     
-    private static final Logger log = LoggerFactory.getLogger(ClientStepsDefinitions.class);
+    private static final Logger log = LoggerFactory.getLogger(ResourceStepsDefinitions.class);
     private final ResourceRequest resourceRequest = new ResourceRequest();
     private Response response;
     private Resource resource;
@@ -70,7 +69,7 @@ public class ResourceStepsDefinitions {
         log.info("All resources are in an inactive state.");
     }
     
-    @When("I send a GET request to find the latest resource")
+    @When("I sent a GET request to find the latest resource")
     public void iSendAGETRequestToFindTheLatestResource() {
         response = resourceRequest.getResources();
         List<Resource> resourceList = resourceRequest.getResourcesEntity(response);
@@ -95,10 +94,12 @@ public class ResourceStepsDefinitions {
         log.info("\nThe resource was updated.{}", response.body().asPrettyString());
     }
     
-    @And("the response's body structure matches with resources Json schema")
+    @Then("the response's body structure matches with resources Json schema")
     public void doesResponseBodyStructureMatchResourcesJsonSchema() {
         String resourceSchemaPath = "schemas/resources.json";
         Assert.assertTrue(resourceRequest.validateSchema(response, resourceSchemaPath));
         log.info("Successfully Validated schema from resource object");
     }
+    
+  
 }
