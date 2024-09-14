@@ -10,6 +10,13 @@ import io.restassured.response.Response;
 
 public class BaseRequest {
     
+    /**
+     * Sends a GET request using Rest-Assured and returns the response.
+     *
+     * @param endpoint the URL of the API endpoint
+     * @param headers a map containing request headers
+     * @return the HTTP response from the GET request
+     */
     protected Response requestGet(String endpoint, Map<String, ?> headers) {
         return RestAssured.given().contentType(Constants.VALUE_CONTENT_TYPE).headers(headers).when().get(endpoint);
     }

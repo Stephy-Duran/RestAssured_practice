@@ -1,15 +1,16 @@
 package com.globant.academy.stepDefinitions;
 
 import com.globant.academy.models.Client;
+import com.globant.academy.models.Resource;
 import com.globant.academy.requests.ClientRequest;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.junit.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,20 +42,21 @@ public class ClientStepsDefinitions {
         log.info(response.body().asPrettyString());
     }
     
-    @When("I send a DELETE request to delete all clients")
+    //@When("I send a DELETE request to delete all clients")
     public void deleteAllClients() {
         response = clientRequest.getClients();//obtengo todos lo clientes
         List<Client> clientList = clientRequest.getClientsEntity(response);  // deserializar la lista de clientes
-        List<String> existingClientsId = new ArrayList<>();
+        List<String> existingClientsIds = new ArrayList<>();
         for(Client client : clientList) {
-            existingClientsId.add(client.getId());
+            existingClientsIds.add(client.getId());
         }
-        for(String id : existingClientsId) {
+        for(String id : existingClientsIds) {
             response = clientRequest.deleteClient(id);
         }
         response = clientRequest.getClients();
         clientList = clientRequest.getClientsEntity(response);
         Assert.assertTrue("Clients were not deleted correctly", clientList.isEmpty());
+        log.info("All clients were removed");
     }
     
     @Then("The response to the request should have a status code of {int}")
@@ -69,7 +71,7 @@ public class ClientStepsDefinitions {
         log.info("Successfully Validated schema from Client object");
     }
     
-    @Then("the client list should be empty")
+    //@Then("the client list should be empty")
     public void clientListShouldBeEmpty() {
         response = clientRequest.getClients();
         List<Client> clientList = clientRequest.getClientsEntity(response);
@@ -161,5 +163,19 @@ public class ClientStepsDefinitions {
         if(!theClientWasFound) {
             log.info("No client found with the name: {} ", name);
         }
+    }
+    
+    @Then("I validate that the client is not in the system.")
+    public void iValidateThatTheClientIsNotInTheSystem() {
+        boolean isClientPresent = false;
+        response = clientRequest.getClients();
+        List<Client> resourceList = clientRequest.getClientsEntity(response);
+        for(Client resource : resourceList) {
+            if(resource.getId().equals(this.client.getId())) {
+                isClientPresent = true;
+                break;
+            }
+        }
+        Assert.assertFalse(isClientPresent);
     }
 }

@@ -11,6 +11,7 @@ import net.datafaker.Faker;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Locale;
 
 public class ResourceRequest extends BaseRequest {
     
@@ -18,11 +19,6 @@ public class ResourceRequest extends BaseRequest {
     
     public Response getResources() {
         endpoint = String.format(Constants.URL, Constants.RESOURCE_PATH);
-        return requestGet(endpoint, createBaseHeaders());
-    }
-    
-    public Response getResource(String resourceId) {
-        endpoint = String.format(Constants.URL_WITH_PARAM, Constants.RESOURCE_PATH, resourceId);
         return requestGet(endpoint, createBaseHeaders());
     }
     
@@ -36,27 +32,13 @@ public class ResourceRequest extends BaseRequest {
         return requestPut(endpoint, createBaseHeaders(), resource);
     }
     
-    public Response deleteResource(Resource resourceId) {
-        endpoint = String.format(Constants.URL_WITH_PARAM, Constants.RESOURCE_PATH, resourceId);
-        return requestDelete(endpoint, createBaseHeaders());
-    }
-    
-    public Response getResourceEntity(@NotNull Response response) {
-        return response.as(Response.class);
-    }
-    
     public List<Resource> getResourcesEntity(@NotNull Response response) {
         JsonPath jsonPath = response.jsonPath();
         return jsonPath.getList("", Resource.class);
     }
     
-    public Resource getResourceEntity(String resourceJson) {
-        Gson gson = new Gson();
-        return gson.fromJson(resourceJson, Resource.class);
-    }
-    
     public Response createResourceWithFakeValues() {
-        Faker fakeData = new Faker();
+        Faker fakeData = new Faker(new Locale("en"));
         Resource resource = Resource.builder()
                                     .name(fakeData.commerce().productName())
                                     .trademark(fakeData.company().name())
